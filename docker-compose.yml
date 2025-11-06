@@ -1,0 +1,62 @@
+services:
+
+  # 1. DỊCH VỤ BACKEND (BỘ NÃO TYPESCRIPT)
+  backend:
+    build: ./backend
+    container_name: qlscl_backend
+    ports:
+      - "3001:3000"
+    environment:
+      DB_HOST: db
+      DB_USER: postgres 
+      DB_PASSWORD: xuanhungduong05
+      DB_NAME: QL_sancaulong
+      DB_PORT: 5432
+    networks:
+      - badminton_network
+    depends_on:
+      # CHỈ KHỞI ĐỘNG SAU KHI DB ĐÃ HEALTHY (SẴN SÀNG)
+      db:
+        condition: service_healthy
+
+  # 2. DỊCH VỤ DATABASE (POSTGRESQL - ĐÃ THÊM HEALTHCHECK)
+  db:
+    image: postgres:15-alpine
+    container_name: qlscl_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: xuanhungduong05
+      POSTGRES_DB: QL_sancaulong
+    volumes:
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - badminton_network
+    
+    # --- PHẦN MỚI THÊM: HEALTHCHECK ---
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # 3. DỊCH VỤ QUẢN LÝ (PGADMIN4)
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: qlscl_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin_password
+    ports:
+      - "5050:80"
+    networks:
+      - badminton_network
+    depends_on:
+      - db
+
+networks:
+  badminton_network:
+    driver: bridge
+
+volumes:
+  postgres_data:

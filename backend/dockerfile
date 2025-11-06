@@ -1,0 +1,32 @@
+# Giai đoạn 1: Build ứng dụng (Biên dịch TS -> JS)
+FROM node:18-alpine AS builder
+
+WORKDIR /usr/src/app
+
+# Cài đặt Nest.js CLI toàn cục
+RUN npm install -g @nestjs/cli
+
+# Copy file package.json và cài đặt thư viện
+COPY package*.json ./
+RUN npm install
+
+# Copy toàn bộ code TypeScript
+COPY . .
+
+# Build ứng dụng
+RUN npm run build
+
+# Giai đoạn 2: Tạo image production (chỉ chứa file JS đã build)
+FROM node:18-alpine
+
+WORKDIR /usr/src/app
+
+# Chỉ copy các thư viện cần thiết cho production
+COPY package*.json ./
+RUN npm install --only=production
+
+# Copy code đã build từ giai đoạn 'builder'
+COPY --from=builder /usr/src/app/dist ./dist
+
+# Lệnh để chạy ứng dụng
+CMD ["node", "dist/main"]

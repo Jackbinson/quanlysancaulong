@@ -1,0 +1,33 @@
+BẢO MẬT: File chứa khóa bí mật và thông tin cấu hình DB
+
+.env
+
+THƯ MỤC CHỨA CÁC GÓI (DEPENDENCIES)
+
+/node_modules
+
+THƯ MỤC OUTPUT CỦA TYPESCRIPT/JAVASCRIPT
+
+/dist
+/build
+/out
+
+THƯ MỤC PHÁT SINH CỦA DOCKER
+
+(Đã được định nghĩa trong docker-compose.yml, nên bỏ qua)
+
+/postgres_data
+
+LOGS VÀ CACHE
+
+.log
+npm-debug.log
+yarn-debug.log*
+yarn-error.log*
+.npm
+.yarn
+
+THƯ MỤC CẤU HÌNH CỦA CÁC IDE (Tùy chọn)
+
+.vscode
+.idea
