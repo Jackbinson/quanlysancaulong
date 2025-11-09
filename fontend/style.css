@@ -1,0 +1,54 @@
+body {
+    /* Sử dụng font Inter cho toàn bộ trang */
+    font-family: 'Inter', sans-serif;
+    background-color: #f8f9fa; /* Màu nền xám nhạt */
+}
+
+.navbar {
+    box-shadow: 0 2px 4px rgba(0,0,0,.05);
+}
+
+.hero-section {
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://placehold.co/1920x600/28a745/ffffff?text=S%C3%A2n+C%E1%BA%A7u+L%C3%B4ng');
+    background-size: cover;
+    background-position: center;
+    color: white;
+    padding: 8rem 0;
+    text-align: center;
+    border-radius: 0 0 1rem 1rem;
+}
+
+.hero-section h1 {
+    font-weight: 700;
+}
+
+/* Tùy chỉnh cho các nút chọn giờ */
+.time-slot {
+    cursor: pointer;
+    border-radius: 0.5rem;
+    border: 1px solid #0d6efd;
+    padding: 0.5rem 1rem;
+    text-align: center;
+    transition: all 0.2s ease;
+}
+
+.time-slot:hover {
+    background-color: #e9ecef;
+}
+
+/* Lớp 'active' sẽ được thêm bằng JavaScript */
+.time-slot.active {
+    background-color: #0d6efd;
+    color: white;
+    font-weight: 500;
+}
+
+.card {
+    border: none;
+    border-radius: 0.75rem;
+}
+
+.sticky-summary {
+    position: sticky;
+    top: 100px; /* Độ dính, cách top 100px */
+}
