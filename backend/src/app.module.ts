@@ -7,9 +7,15 @@ import { Booking } from './entities/booking.entity';
 import { Court } from './entities/court.entity'; 
 import { Membership } from './entities/membership.entity'; 
 import { Payment } from './entities/payment.entity'; 
-import { Notification } from './entities/notification.entity'; 
-// -----------------------------
-
+import { Notification } from './entities/notification.entity';
+// ---- user module import --- 
+import { UserModule } from './user/user.module'; 
+// ---- court module import ---
+import { CourtModule } from './court/court.module';
+// ---- booking module import ---
+import { BookingModule } from './booking/booking.module';
+// ---- payment module import ---
+import { PaymentModule } from './payment/payment.module';
 @Module({
   imports: [
     // Cấu hình TypeORM
@@ -28,6 +34,10 @@ import { Notification } from './entities/notification.entity';
     }),
 
     AuthModule, 
+    UserModule, // <-- ĐÃ ĐƯỢC IMPORT
+    CourtModule, // <-- ĐÃ ĐƯỢC IMPORT
+    BookingModule, // <-- ĐÃ ĐƯỢC IMPORT
+    PaymentModule, // <-- ĐÃ ĐƯỢC IMPORT
   ],
   controllers: [],
   providers: [],

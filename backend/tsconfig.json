@@ -17,5 +17,15 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false
-  }
+  },
+  
+  // --- THÊM PHẦN NÀY ĐỂ GIẢI QUYẾT LỖI BIÊN DỊCH ---
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+  // ----------------------------------------------------
 }

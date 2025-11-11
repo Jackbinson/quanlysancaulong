@@ -1,14 +1,13 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToOne } from 'typeorm';
-import { User } from './user.entity'; // <-- Import User
-import { Court } from './court.entity'; // <-- Import Court
-import { Payment } from './payment.entity'; // <-- BẮT BUỘC PHẢI IMPORT PAYMENT
+import { User } from './user.entity'; 
+import { Court } from './court.entity'; 
+import { Payment } from './payment.entity'; 
 
 @Entity('bookings')
 export class Booking {
   @PrimaryGeneratedColumn()
   id: number;
 
-  // --- Foreign Keys ---
   @Column({ name: 'user_id' })
   user_id: number;
 
@@ -17,7 +16,6 @@ export class Booking {
   
   @Column({ nullable: true })
   staff_checkin_id: number;
-  // --------------------
 
   @Column({ type: 'timestamp' })
   start_time: Date;
@@ -35,25 +33,22 @@ export class Booking {
   deposit: number;
 
   @Column({ length: 50 })
-  status: string; // e.g., 'pending', 'confirmed', 'cancelled'
+  status: string; 
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   created_at: Date;
 
 
-  // --- Mối quan hệ: Many-to-One ---
-  
-  // Mối quan hệ với User (Bắt buộc phải dùng hàm mũi tên)
+  // Mối quan hệ Many-to-One
   @ManyToOne(() => User, (user) => user.bookings) 
-  @JoinColumn({ name: 'user_id' }) // Liên kết với cột user_id
+  @JoinColumn({ name: 'user_id' }) 
   user: User;
 
-  // Mối quan hệ với Court
   @ManyToOne(() => Court, (court) => court.bookings)
-  @JoinColumn({ name: 'court_id' }) // Liên kết với cột court_id
+  @JoinColumn({ name: 'court_id' }) 
   court: Court;
-    
-  // --- Mối quan hệ: One-to-One (Ngược lại với Payment) ---
-  @OneToOne(() => Payment, (payment) => payment.booking)
-  payment: Payment; // <--- KHAI BÁO THUỘC TÍNH 'payment' để khắc phục lỗi biên dịch
+    
+  // Mối quan hệ One-to-One
+  @OneToOne(() => Payment, (payment) => payment.booking)
+  payment: Payment; 
 }

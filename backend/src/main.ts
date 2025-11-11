@@ -1,6 +1,6 @@
 import { NestFactory, HttpAdapterHost } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { AllExceptionsFilter } from './all-exceptions.filter'; // <-- Import filter
+import { AllExceptionsFilter } from './shared/filters/all-exceptions.filter'; // <-- Import filter
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
