@@ -18,6 +18,8 @@ import { BookingModule } from './booking/booking.module';
 import { PaymentModule } from './payment/payment.module';
 // ---- membership module import --- 
 import { MembershipModule } from './membership/membership.module';
+// ---- reports module import --- 
+import { ReportsModule } from './reports/reports.module'; // <-- IMPORT MODULE MỚI
 @Module({
   imports: [
     // Cấu hình TypeORM
@@ -41,6 +43,7 @@ import { MembershipModule } from './membership/membership.module';
     BookingModule, // <-- ĐÃ ĐƯỢC IMPORT
     PaymentModule, // <-- ĐÃ ĐƯỢC IMPORT
     MembershipModule,
+    ReportsModule,
   ],
   controllers: [],
   providers: [],

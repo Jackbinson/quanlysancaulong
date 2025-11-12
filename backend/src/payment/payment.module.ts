@@ -1,18 +1,20 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Payment } from '../entities/payment.entity'; // <-- Import Entity Payment
-import { Booking } from '../entities/booking.entity'; // <-- Cần thiết để cập nhật trạng thái
+import { Payment } from '../entities/payment.entity';
+import { Booking } from '../entities/booking.entity';
+import { User } from '../entities/user.entity'; // <-- 1. IMPORT USER
 import { PaymentService } from './payment.service';
 import { PaymentController } from './payment.controller';
-import { AuthModule } from '../auth/auth.module'; // Dùng để bảo vệ API
+import { AuthModule } from '../auth/auth.module';
+import { EmailService } from '../shared/email/email.service'; // <-- 2. IMPORT EMAIL SERVICE
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Payment, Booking]), // Đăng ký Payment và Booking Entity
-    AuthModule, // Thừa hưởng cơ chế bảo mật (Guard)
+    TypeOrmModule.forFeature([Payment, Booking, User]), // <-- 3. THÊM USER
+    AuthModule,
   ],
   controllers: [PaymentController],
-  providers: [PaymentService],
-  exports: [PaymentService], // Export nếu các module khác cần ghi nhận Payment
+  providers: [PaymentService, EmailService], // <-- 4. THÊM EMAIL SERVICE
+  exports: [PaymentService],
 })
 export class PaymentModule {}

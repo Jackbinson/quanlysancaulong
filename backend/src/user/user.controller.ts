@@ -1,36 +1,49 @@
-import { Controller, Get, UseGuards, Request } from '@nestjs/common';
+import { Controller, Get, UseGuards, Request, Param, Patch, Body, HttpCode, HttpStatus } from '@nestjs/common';
 import { UserService } from './user.service';
 import { JwtAuthGuard } from '../shared/guards/jwt-auth.guard';
 import { RolesGuard } from '../shared/guards/roles.guard'; 
-import { Roles } from '../shared/decorators/roles.decorator';
+import { Roles, Role } from '../shared/decorators/roles.decorator';
 
-@Controller('users') // Base route: /api/users
+// DTO cho việc cập nhật Role
+class UpdateRoleDto {
+    role: Role;
+}
+
+@Controller('users') 
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  // API 1: Xem TẤT CẢ Users (Quản lý)
-  // Route: GET /api/users
-  @Roles('admin') // <-- BẮT BUỘC CHỈ ADMIN MỚI ĐƯỢC VÀO
+  // API 1: Xem TẤT CẢ Users (Giữ nguyên)
+  @Roles('admin') 
   @UseGuards(JwtAuthGuard, RolesGuard) 
   @Get()
   async getAllUsers() {
-    // Gọi hàm Service tìm kiếm tất cả người dùng
     return this.userService.findAll(); 
   }
 
-  // API 2: Xem hồ sơ của chính user đó (Profile)
-  // Route: GET /api/users/profile
+  // API 2: Xem hồ sơ (Profile) (Giữ nguyên)
   @UseGuards(JwtAuthGuard)
-  @Get('profile') // <-- Sub-route là 'profile'
+  @Get('profile') 
   async getProfile(@Request() req) {
-    // Dùng findOneById, chỉ trả về user từ Token
     const user = await this.userService.findOneById(req.user.userId);
+    return { /* ... */ };
+  }
+
+  // API MỚI (Tính năng 19): Cập nhật vai trò User
+  // Route: PATCH /api/users/:id/role
+  @Roles('admin') // <-- Chỉ Admin mới có quyền
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Patch(':id/role')
+  async updateUserRole(
+    @Param('id') userId: number, 
+    @Body() updateRoleDto: UpdateRoleDto
+  ) {
+    const numericUserId = parseInt(userId as any, 10);
+    const updatedUser = await this.userService.updateRole(numericUserId, updateRoleDto.role);
     
     return {
-      id: user.id,
-      email: user.email,
-      full_name: user.full_name,
-      role: user.role
+        message: `Đã cập nhật vai trò cho User ID ${numericUserId} thành ${updateRoleDto.role}.`,
+        user: updatedUser
     };
   }
 }
