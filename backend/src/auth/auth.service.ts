@@ -16,6 +16,7 @@ interface RegisterDto {
   email: string;
   password: string;
   full_name?: string;
+  phone_number?: string; // <-- Đã thêm
 }
 
 @Injectable()
@@ -31,8 +32,8 @@ export class AuthService {
 
   // TÍNH NĂNG 1: Xử lý Đăng ký (Register)
   async register(registerDto: RegisterDto): Promise<User> {
-    // LOẠI BỎ 'role' KHỎI DTO VÌ NÓ LÀ LỖ HỔNG BẢO MẬT
-    const { email, password, full_name } = registerDto;
+    // TRÍCH XUẤT phone_number
+    const { email, password, full_name, phone_number } = registerDto;
 
     // 1. Kiểm tra email đã tồn tại
     const existingUser = await this.usersRepository.findOne({ where: { email } });
@@ -49,7 +50,8 @@ export class AuthService {
       email,
       password_hash, 
       full_name: full_name || 'Khách hàng',
-      role: 'user', // <-- LUÔN GÁN MẶC ĐỊNH LÀ 'user'
+      phone_number: phone_number || null, // <-- LƯU SỐ ĐIỆN THOẠI
+      role: 'user', // <-- LUÔN GÁN MẶC ĐỊNH LÀ 'user' (NGĂN CHẶN LỖ HỔNG BẢO MẬT)
     });
 
     // 4. Lưu vào Database

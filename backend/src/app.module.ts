@@ -16,6 +16,8 @@ import { CourtModule } from './court/court.module';
 import { BookingModule } from './booking/booking.module';
 // ---- payment module import ---
 import { PaymentModule } from './payment/payment.module';
+// ---- membership module import --- 
+import { MembershipModule } from './membership/membership.module';
 @Module({
   imports: [
     // Cấu hình TypeORM
@@ -38,6 +40,7 @@ import { PaymentModule } from './payment/payment.module';
     CourtModule, // <-- ĐÃ ĐƯỢC IMPORT
     BookingModule, // <-- ĐÃ ĐƯỢC IMPORT
     PaymentModule, // <-- ĐÃ ĐƯỢC IMPORT
+    MembershipModule,
   ],
   controllers: [],
   providers: [],
