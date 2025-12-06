@@ -1,12 +1,10 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { Search, MapPin, Bell } from 'lucide-react';
-import { AuthContext } from '../context/AuthContext';
+import React, { useState, useEffect } from 'react';
 import { mockApiCall, MOCK_DB } from '../api/mockApi';
 import { MOCK_API_BASE } from '../utils/constants';
 import CourtCard from '../components/CourtCard';
+import '../App.css'; 
 
 const HomeScreen = ({ navigateTo }) => {
-    const { user } = useContext(AuthContext);
     const [courts, setCourts] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
 
@@ -21,60 +19,73 @@ const HomeScreen = ({ navigateTo }) => {
     );
 
     return (
-        <div className="bg-gray-50 min-h-screen pb-24">
-            {/* --- HEADER GRADIENT --- */}
-            <div className="bg-gradient-to-br from-green-600 to-green-500 rounded-b-[30px] p-6 pt-8 shadow-lg text-white mb-6">
+        <div className="main-content" style={{ maxWidth: '1200px', margin: '0 auto', paddingTop: '30px' }}>
+            
+            {/* 1. BANNER TÌM KIẾM (Đẹp hơn, thay thế cho Navbar cũ) */}
+            <div style={{ 
+                background: 'linear-gradient(135deg, #00994C 0%, #059669 100%)', 
+                borderRadius: '20px', 
+                padding: '40px', 
+                textAlign: 'center', 
+                color: 'white',
+                marginBottom: '40px',
+                boxShadow: '0 10px 25px -5px rgba(0, 153, 76, 0.4)'
+            }}>
+                <h1 style={{ fontSize: '32px', fontWeight: '800', margin: '0 0 10px 0' }}>Đặt Sân Cầu Lông Nhanh Chóng</h1>
+                <p style={{ fontSize: '16px', opacity: 0.9, marginBottom: '24px' }}>Tìm kiếm và đặt lịch sân gần bạn chỉ với vài cú click</p>
                 
-                {/* Row: Greeting + Bell */}
-                <div className="flex justify-between items-center mb-6">
-                    <div>
-                        <p className="text-green-100 text-sm font-medium">Xin chào,</p>
-                        <h2 className="text-2xl font-bold">{user?.username || "Khách"} 👋</h2>
-
-                        {/* >>> ĐÃ DÙNG MapPin <<< */}
-                        <div className="flex items-center gap-1 mt-1 text-green-100 text-sm">
-                            <MapPin className="w-4 h-4 text-white" />
-                            <span>TP. Hồ Chí Minh</span>
-                        </div>
-                    </div>
-
-                    <div className="bg-white/20 p-2 rounded-full backdrop-blur-sm">
-                        <Bell size={24} className="text-white" />
-                    </div>
-                </div>
-
-                {/* Ô TÌM KIẾM */}
-                <div className="relative">
-                    <Search className="absolute left-4 top-3.5 text-gray-400" size={20} />
-                    <input
-                        type="text"
-                        placeholder="Tìm kiếm sân..."
+                {/* Ô tìm kiếm to đẹp */}
+                <div style={{ position: 'relative', maxWidth: '600px', margin: '0 auto' }}>
+                    <input 
+                        type="text" 
+                        placeholder="Tìm tên sân, khu vực..." 
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full py-3 pl-12 pr-4 rounded-2xl border-none shadow-md text-gray-800 placeholder-gray-400 focus:ring-2 focus:ring-green-300 outline-none"
+                        style={{ 
+                            width: '100%', 
+                            padding: '16px 20px 16px 50px', 
+                            borderRadius: '50px', 
+                            border: 'none', 
+                            fontSize: '16px', 
+                            boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                            outline: 'none'
+                        }}
                     />
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)' }}>
+                        <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <button style={{
+                        position: 'absolute', right: '6px', top: '6px', bottom: '6px',
+                        background: '#111827', color: 'white', border: 'none',
+                        padding: '0 24px', borderRadius: '40px', fontWeight: '600', cursor: 'pointer'
+                    }}>
+                        Tìm kiếm
+                    </button>
                 </div>
             </div>
 
-            {/* --- DANH SÁCH SÂN --- */}
-            <div className="px-4">
-                <div className="flex justify-between items-end mb-4">
-                    <h3 className="text-xl font-bold text-gray-800">Danh sách sân</h3>
-                    <span className="text-green-600 text-sm font-semibold cursor-pointer">
-                        Xem tất cả
-                    </span>
-                </div>
+            {/* 2. DANH SÁCH SÂN */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '20px', padding: '0 10px' }}>
+                <h2 style={{ fontSize: '24px', fontWeight: '800', color: '#111827', margin: 0 }}>Danh sách sân nổi bật</h2>
+                <span style={{ color: '#00994C', fontWeight: '600', cursor: 'pointer', fontSize: '14px' }}>Xem tất cả &rarr;</span>
+            </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                    {filteredCourts.map(court => (
+            <div className="court-grid">
+                {filteredCourts.length > 0 ? (
+                    filteredCourts.map(court => (
                         <CourtCard
                             key={court.id}
                             court={court}
                             onBook={() => navigateTo('booking', { courtId: court.id })}
                             onViewDetails={() => navigateTo('courtDetails', { courtId: court.id })}
                         />
-                    ))}
-                </div>
+                    ))
+                ) : (
+                    <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '60px', color: '#6b7280' }}>
+                        <div style={{ fontSize: '40px', marginBottom: '10px' }}>🔍</div>
+                        <p>Không tìm thấy sân nào phù hợp với từ khóa "{searchTerm}"</p>
+                    </div>
+                )}
             </div>
         </div>
     );
