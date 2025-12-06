@@ -1,70 +1,126 @@
-# Getting Started with Create React App
+Thư mục này chứa mã nguồn frontend của dự án quanlysancaulong, được xây dựng bằng React + Create React App.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+1️⃣ Yêu cầu hệ thống
 
-## Available Scripts
+Trước khi chạy frontend, bạn cần:
 
-In the project directory, you can run:
+Node.js >= 16
 
-### `npm start`
+npm >= 6
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Kiểm tra bằng:
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+node -v
+npm -v
 
-### `npm test`
+2️⃣ Cài đặt dependencies (bao gồm react-scripts)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Trong thư mục frontend, chạy:
 
-### `npm run build`
+cd frontend
+npm install
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Lệnh này sẽ tự động cài tất cả thư viện trong package.json, bao gồm:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+react
 
-### `npm run eject`
+react-dom
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+react-scripts
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+các thư viện UI/API mà bạn thêm vào
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Nếu react-scripts chưa được cài hoặc bị lỗi, bạn có thể chạy:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+npm install react-scripts --save
 
-## Learn More
+3️⃣ Chạy dự án ở chế độ development
+npm start
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Ứng dụng sẽ chạy tại:
 
-### Code Splitting
+👉 http://localhost:3000
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Trang web sẽ tự reload khi bạn chỉnh sửa mã nguồn.
 
-### Analyzing the Bundle Size
+4️⃣ Build sản phẩm để deploy
+npm run build
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
 
-### Making a Progressive Web App
+Thư mục build/ sẽ được tạo để deploy lên server hoặc Nginx.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+5️⃣ Chạy test (nếu sử dụng)
+npm test
 
-### Advanced Configuration
+6️⃣ Cài thêm thư viện
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+Bạn có thể cài thư viện bất kỳ bằng npm:
 
-### Deployment
+📌 React Router
+npm install react-router-dom
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+📌 Axios
+npm install axios
 
-### `npm run build` fails to minify
+📌 TailwindCSS
+npm install -D tailwindcss postcss autoprefixer
+npx tailwindcss init -p
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+📌 Redux Toolkit
+npm install @reduxjs/toolkit react-redux
+
+7️⃣ Cấu trúc thư mục Frontend
+frontend/
+│
+├── node_modules/
+├── public/
+│   ├── index.html
+│   └── favicon.ico
+│
+├── src/
+│   ├── pages/
+│   ├── components/
+│   ├── utils/
+│   ├── setupTests.js
+│   ├── reportWebVitals.js
+│   ├── App.js
+│   └── index.js
+│
+├── package.json
+├── package-lock.json
+└── README.md
+
+🔍 Giải thích nhanh:
+
+src/pages/ → các màn hình chính
+
+src/components/ → các component dùng chung
+
+src/utils/ → hằng số, hàm tiện ích
+
+public/ → template HTML
+
+package.json → danh sách thư viện + script
+
+8️⃣ Các lệnh npm quan trọng
+Lệnh	Chức năng
+npm start	Chạy frontend
+npm install	Cài thư viện
+npm run build	Build để deploy
+npm test	Chạy test
+npm install <package>	Cài thư viện mới
+9️⃣ Lỗi thường gặp
+❌ react-scripts: command not found
+
+Cách fix:
+
+npm install react-scripts
+
+❌ Lỗi Node version quá cao
+
+Fix bằng nvm:
+
+nvm install 18
+nvm use 18
