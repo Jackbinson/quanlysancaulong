@@ -1,108 +1,110 @@
 import React, { useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import { User, Lock, ArrowRight } from 'lucide-react';
+import '../App.css'; 
 
 const LoginScreen = ({ onLoginSuccess }) => {
-    // Chỉ lấy login, loading, error từ Context (Không lấy setError vì Context chưa export)
     const { login, loading, error } = useContext(AuthContext); 
-    const [username, setUsername] = useState('user1', 'staff');
-    const [password, setPassword] = useState('123');
+    const [username, setUsername] = useState('user1'); 
+    const [password, setPassword] = useState('');
     const [isRegister, setIsRegister] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (isRegister) {
-            alert('Đăng ký thành công! (Mock)');
+            alert('Chức năng Đăng ký (Mock) thành công!');
             setIsRegister(false);
             return;
         }
-        
         const success = await login(username, password);
-        if (success) onLoginSuccess();
+        if (success && onLoginSuccess) {
+            onLoginSuccess();
+        }
     };
 
     return (
-        <div className="min-h-screen flex bg-white">
-            {/* 1. PHẦN ẢNH BÊN TRÁI */}
-            <div className="hidden lg:flex lg:w-1/2 bg-cover bg-center relative" 
-                 style={{ backgroundImage: "url('https://images.unsplash.com/photo-1521537634581-0dced2fee2ef?q=80&w=1920&auto=format&fit=crop')" }}>
-                <div className="absolute inset-0 bg-green-900/60 flex flex-col justify-center px-12 text-white">
-                    <h1 className="text-5xl font-bold mb-6">Badminton Booking</h1>
-                    <p className="text-xl opacity-90">Đặt sân nhanh chóng, thi đấu đỉnh cao. Kết nối đam mê cầu lông của bạn ngay hôm nay.</p>
-                </div>
-            </div>
-
-            {/* 2. PHẦN FORM BÊN PHẢI */}
-            <div className="flex-1 flex items-center justify-center p-8 bg-gray-50">
-                <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-xl">
-                    <div className="text-center mb-8">
-                        <h2 className="text-3xl font-bold text-gray-800 mb-2">
-                            {isRegister ? 'Tạo Tài Khoản' : 'Chào Mừng Trở Lại'}
-                        </h2>
-                        <p className="text-gray-500">Vui lòng nhập thông tin để tiếp tục</p>
-                    </div>
+        <div className="app-container">
+            <div className="login-wrapper">
+                <div className="card-modern">
                     
-                    <form onSubmit={handleSubmit} className="space-y-5">
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Tên đăng nhập</label>
-                            <div className="relative">
-                                <User className="absolute left-3 top-3 text-gray-400" size={20} />
-                                <input
-                                    type="text"
-                                    value={username}
-                                    onChange={(e) => setUsername(e.target.value)}
-                                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition"
-                                    placeholder="user1"
-                                    required
-                                />
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Mật khẩu</label>
-                            <div className="relative">
-                                <Lock className="absolute left-3 top-3 text-gray-400" size={20} />
-                                <input
-                                    type="password"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition"
-                                    placeholder="••••••"
-                                    required
-                                />
-                            </div>
+                    {/* Header */}
+                    <div className="login-header-bg">
+                        <h1 className="login-title">Badminton Booking</h1>
+                    </div>
+
+                    <div className="login-body">
+                        <div style={{ textAlign: 'center', marginBottom: '24px' }}>
+                            <h2 style={{ fontSize: '20px', fontWeight: '700', color: '#1e293b', margin: '0 0 8px 0' }}>
+                                {isRegister ? 'Đăng Ký Tài Khoản' : 'Chào Mừng Trở Lại'}
+                            </h2>
+                            <p style={{ color: '#64748b', fontSize: '14px', margin: 0 }}>
+                                {isRegister ? 'Tham gia cộng đồng cầu lông ngay' : 'Đăng nhập để đặt sân nhanh chóng'}
+                            </p>
                         </div>
 
-                        {error && (
-                            <div className="p-3 bg-red-50 text-red-600 text-sm rounded-lg flex items-center">
-                                <span className="mr-2">⚠️</span> {error}
+                        <form onSubmit={handleSubmit}>
+                            {/* Username */}
+                            <div className="form-group">
+                                <label className="form-label">Tên đăng nhập</label>
+                                <div className="input-icon-wrapper">
+                                    <svg className="input-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                    </svg>
+                                    <input
+                                        type="text"
+                                        className="input-modern"
+                                        placeholder="Nhập tên đăng nhập"
+                                        value={username}
+                                        onChange={(e) => setUsername(e.target.value)}
+                                        required
+                                    />
+                                </div>
                             </div>
-                        )}
 
-                        <button
-                            type="submit"
-                            disabled={loading}
-                            className="w-full py-3 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl shadow-lg transition transform hover:-translate-y-1 flex items-center justify-center"
-                        >
-                            {loading ? 'Đang xử lý...' : (
-                                <>
-                                    {isRegister ? 'Đăng Ký' : 'Đăng Nhập'} <ArrowRight size={20} className="ml-2" />
-                                </>
+                            {/* Password */}
+                            <div className="form-group">
+                                <label className="form-label">Mật khẩu</label>
+                                <div className="input-icon-wrapper">
+                                    <svg className="input-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                    </svg>
+                                    <input
+                                        type="password"
+                                        className="input-modern"
+                                        placeholder="••••••••"
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        required
+                                    />
+                                </div>
+                            </div>
+
+                            {error && (
+                                <div style={{ padding: '10px', background: '#fee2e2', color: '#dc2626', borderRadius: '8px', marginBottom: '15px', fontSize: '14px' }}>
+                                    ⚠️ {error}
+                                </div>
                             )}
-                        </button>
-                    </form>
 
-                    <div className="mt-6 text-center">
-                        <p className="text-gray-600">
-                            {isRegister ? 'Đã có tài khoản?' : 'Chưa có tài khoản?'}
-                            <button 
-                                // ĐÃ SỬA DÒNG NÀY (Xóa setError(null) đi)
-                                onClick={() => setIsRegister(!isRegister)}
-                                className="ml-2 text-green-600 font-bold hover:underline"
-                            >
-                                {isRegister ? 'Đăng nhập ngay' : 'Đăng ký ngay'}
+                            {/* Button */}
+                            <button type="submit" className="btn-primary" disabled={loading}>
+                                {loading ? 'Đang xử lý...' : (isRegister ? 'Đăng Ký' : 'Đăng Nhập')}
+                                {/* Đã fix cứng kích thước icon ở đây */}
+                                {!loading && (
+                                    <svg xmlns="http://www.w3.org/2000/svg" style={{ width: '20px', height: '20px', marginLeft: '8px' }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                    </svg>
+                                )}
                             </button>
-                        </p>
+                        </form>
+
+                        <div className="register-link">
+                            {isRegister ? 'Đã có tài khoản?' : 'Chưa có tài khoản?'}
+                            <button
+                                onClick={() => setIsRegister(!isRegister)}
+                                style={{ background: 'none', border: 'none', color: '#16a34a', fontWeight: '700', cursor: 'pointer', marginLeft: '5px', textDecoration: 'underline' }}
+                            >
+                                {isRegister ? 'Đăng nhập' : 'Đăng ký ngay'}
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
