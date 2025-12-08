@@ -1,6 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { AuthContext, AuthProvider } from './context/AuthContext';
-import { MOCK_DB } from './api/mockApi';
 import TopNav from './components/TopNav'; 
 import Header from './components/Header'; 
 import './App.css'; 
@@ -20,11 +19,12 @@ import StaffDashboardScreen from './pages/admin/StaffDashboardScreen';
 
 const App = () => {
     const { user, logout } = useContext(AuthContext);
-    const [screen, setScreen] = useState('login'); // Mặc định là Login
+    const [screen, setScreen] = useState('login'); 
+    
+    // screenData sẽ chứa: { courtId: 1, courtName: "Sân A", ... }
     const [screenData, setScreenData] = useState({});
 
     // 1. LOGIC TỰ ĐỘNG CHUYỂN TRANG CHỦ THEO ROLE
-    // Mỗi khi user đăng nhập, tự động đưa họ về "nhà" của họ
     useEffect(() => {
         if (user) {
             if (screen === 'login') {
@@ -43,42 +43,38 @@ const App = () => {
         window.scrollTo(0, 0);
     };
 
-    // 2. KHU VỰC MÀN HÌNH DÀNH RIÊNG CHO USER (KHÁCH HÀNG)
+    // 2. USER ROUTES
     const renderUserRoutes = () => {
         switch (screen) {
             case 'home': return <HomeScreen navigateTo={navigateTo} />;
             case 'courtDetails': return <CourtDetailsScreen courtId={screenData.courtId} navigateTo={navigateTo} />;
-            case 'booking': return <BookingScreen courtId={screenData.courtId} navigateTo={navigateTo} />;
+            case 'booking': return <BookingScreen courtId={screenData.courtId} courtName={screenData.courtName} navigateTo={navigateTo} />;
             case 'bookingSuccess': return <BookingSuccessScreen navigateTo={navigateTo} />;
             case 'myBookings': return <MyBookingsScreen navigateTo={navigateTo} />;
             case 'profile': return <ProfileScreen />;
-            default: return <HomeScreen navigateTo={navigateTo} />; // Mặc định về Home
+            default: return <HomeScreen navigateTo={navigateTo} />;
         }
     };
 
-    // 3. KHU VỰC MÀN HÌNH DÀNH RIÊNG CHO STAFF (NHÂN VIÊN)
+    // 3. STAFF ROUTES
     const renderStaffRoutes = () => {
         switch (screen) {
             case 'staffDashboard': return <StaffDashboardScreen />;
-            // Staff chỉ có 1 màn hình Dashboard chính (đã tích hợp mọi thứ)
-            // Nếu có thêm màn hình con, thêm case ở đây
             default: return <StaffDashboardScreen />; 
         }
     };
 
-    // 4. KHU VỰC MÀN HÌNH DÀNH RIÊNG CHO ADMIN (QUẢN TRỊ)
+    // 4. ADMIN ROUTES
     const renderAdminRoutes = () => {
         switch (screen) {
             case 'adminDashboard': return <AdminDashboardScreen navigateTo={navigateTo} />;
-            // Admin có thể vào xem giao diện Staff để kiểm tra (nếu muốn)
-            case 'staffBooking': // Giữ lại để Admin có thể test tính năng Staff
+            case 'staffBooking': 
             case 'staffDashboard': return <StaffDashboardScreen />;
             default: return <AdminDashboardScreen navigateTo={navigateTo} />;
         }
     };
 
-    // 5. RENDER CHÍNH (MAIN SWITCH)
-    // Dựa vào Role để quyết định dùng bộ Router nào
+    // 5. RENDER CHÍNH
     const renderContent = () => {
         if (!user) return <LoginScreen onLoginSuccess={() => {}} />;
         
@@ -89,12 +85,11 @@ const App = () => {
         }
     };
 
-    // --- CẤU HÌNH HEADER & NAV ---
+    // --- CẤU HÌNH HEADER ---
     
-    // Tiêu đề Header
+    // CẬP NHẬT: Lấy tên sân từ screenData thay vì tra cứu MOCK_DB
     const getScreenTitle = () => {
-        const court = MOCK_DB.courts.find(c => c.id === screenData.courtId);
-        if (screen === 'courtDetails') return court ? `Chi Tiết: ${court.name}` : 'Chi Tiết';
+        if (screen === 'courtDetails') return screenData.courtName ? `Chi Tiết: ${screenData.courtName}` : 'Chi Tiết Sân';
         if (screen === 'booking') return 'Đặt Sân';
         if (screen === 'profile') return 'Hồ Sơ Cá Nhân';
         if (screen === 'staffDashboard') return 'Cổng Nhân Viên';
@@ -102,35 +97,18 @@ const App = () => {
         return 'Badminton Booking';
     };
 
-    // Điều kiện ẩn/hiện nút Back và TopNav
     const isLogin = !user || screen === 'login';
-    
-    // Chỉ hiện TopNav ở các trang chủ của từng Role
     const showTopNav = user && !isLogin; 
-
-    // Chỉ hiện nút Back ở các trang con của User (Đặt sân, Chi tiết)
-    // Admin và Staff dùng Dashboard nên ít khi cần nút Back của Header này
-    const showBackHeader = 
-        !isLogin && 
-        user.role === 'user' && // Chỉ User mới cần header phụ này thường xuyên
-        screen !== 'home' && 
-        screen !== 'myBookings' && 
-        screen !== 'profile';
+    const showBackHeader = !isLogin && user.role === 'user' && screen !== 'home' && screen !== 'myBookings' && screen !== 'profile';
 
     return (
         <div className={isLogin ? "login-page-container" : "app-container"}>
-            
-            {/* 1. MENU ĐIỀU HƯỚNG CHÍNH */}
+            {/* MENU CHÍNH */}
             {showTopNav && (
-                <TopNav 
-                    currentScreen={screen} 
-                    navigateTo={navigateTo} 
-                    user={user}
-                    onLogout={logout}
-                />
+                <TopNav currentScreen={screen} navigateTo={navigateTo} user={user} onLogout={logout} />
             )}
 
-            {/* 2. HEADER PHỤ (CHO TRANG CON) */}
+            {/* HEADER PHỤ */}
             {showBackHeader && (
                 <Header 
                     title={getScreenTitle()}
@@ -140,7 +118,6 @@ const App = () => {
                 />
             )}
             
-            {/* 3. NỘI DUNG CHÍNH (ĐÃ PHÂN TÁCH LUỒNG) */}
             <main style={{ width: '100%', flex: 1 }}>
                 {renderContent()}
             </main>

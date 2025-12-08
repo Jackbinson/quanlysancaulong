@@ -44,9 +44,11 @@ CREATE TABLE bookings (
     price DECIMAL(10, 2) NOT NULL,
     discount DECIMAL(10, 2) DEFAULT 0,
     deposit DECIMAL(10, 2) DEFAULT 0,
-    status VARCHAR(50) NOT NULL DEFAULT 'pending', -- pending, confirmed, checked_in, canceled
-    staff_checkin_id INT REFERENCES users(id) -- Staff nào check-in
+    status VARCHAR(50) NOT NULL DEFAULT 'pending',
+    staff_checkin_id INT REFERENCES users(id),
+    created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP  -- ★ THÊM DÒNG NÀY
 );
+
 
 -- 5. Bảng ghi nhận thanh toán
 CREATE TABLE payments (

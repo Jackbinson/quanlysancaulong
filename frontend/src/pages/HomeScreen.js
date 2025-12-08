@@ -16,7 +16,7 @@ const HomeScreen = ({ navigateTo }) => {
 
     const filteredCourts = courts.filter(c =>
         c.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    );  
 
     return (
         <div className="main-content" style={{ maxWidth: '1200px', margin: '0 auto', paddingTop: '30px' }}>
